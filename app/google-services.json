@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "881537047324",
+    "firebase_url": "https://recipeio-b802c-default-rtdb.europe-west1.firebasedatabase.app",
+    "project_id": "recipeio-b802c",
+    "storage_bucket": "recipeio-b802c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:881537047324:android:7b713503fff546c81ab8d9",
+        "android_client_info": {
+          "package_name": "com.example.recipeio"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "881537047324-m4uvaqsbu1bc57pjflsijum7ian3hrpr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB59AWYPWGeluYx6su9EbLU1_XkAu_OLic"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "881537047324-m4uvaqsbu1bc57pjflsijum7ian3hrpr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
