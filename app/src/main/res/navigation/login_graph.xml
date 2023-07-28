@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/startFragment"
-        android:name="com.example.recipeio.StartFragment"
+        android:name="com.example.recipeio.view.fragments.StartFragment"
         android:label="fragment_start"
         tools:layout="@layout/fragment_start" >
         <action
@@ -16,7 +16,7 @@
     </fragment>
     <fragment
         android:id="@+id/loginFragment"
-        android:name="com.example.recipeio.LoginFragment"
+        android:name="com.example.recipeio.view.fragments.LoginFragment"
         android:label="fragment_login"
         tools:layout="@layout/fragment_login" >
         <action
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/signUpFragment"
-        android:name="com.example.recipeio.SignUpFragment"
+        android:name="com.example.recipeio.view.fragments.SignUpFragment"
         android:label="fragment_sign_up"
         tools:layout="@layout/fragment_sign_up" >
         <action
@@ -37,7 +37,7 @@
     </fragment>
     <fragment
         android:id="@+id/forgotPassFragment"
-        android:name="com.example.recipeio.ForgotPassFragment"
+        android:name="com.example.recipeio.view.fragments.ForgotPassFragment"
         android:label="fragment_forgot_pass"
         tools:layout="@layout/fragment_forgot_pass" >
         <action
