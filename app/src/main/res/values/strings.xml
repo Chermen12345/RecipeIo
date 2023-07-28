@@ -17,4 +17,9 @@
     <string name="google">Google</string>
     <string name="havent_acc">Dont have any account?</string>
     <string name="go_to_signUp">Sign Up</string>
+    <!-- SignUp fragment strs-->
+    <string name="hello">Hello!</string>
+    <string name="repeatpass">Repeat password</string>
+    <string name="makeanaccount">Create an account</string>
+    <string name="alreadyhaveacc">already have an account?</string>
 </resources>
