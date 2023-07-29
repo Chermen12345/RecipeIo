@@ -16,13 +16,14 @@ import com.example.recipeio.R
 import com.example.recipeio.databinding.FragmentSignUpBinding
 import com.example.recipeio.model.User
 import com.example.recipeio.presenter.SignUpPresenterImpl
+import com.example.recipeio.presenter.SignUpView
 import com.example.recipeio.view.activities.HomeActivity
-import com.example.recipeio.view.interfaces.SignUpView
+
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 
 
-class SignUpFragment : Fragment(),SignUpView {
+class SignUpFragment : Fragment(), SignUpView {
     private lateinit var binding: FragmentSignUpBinding
     var uri: Uri ?= null
     private val presenter = SignUpPresenterImpl()
@@ -43,13 +44,20 @@ class SignUpFragment : Fragment(),SignUpView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        //TODO launch presenter and signUp
         presenter.attach(this)
         signUp()
+        
+        //TODO getting the uri from gallery
         getImage()
 
+        //TODO navigation
         goToLogin()
     }
 
+    //TODO fun for getting image
+
+    //here we launch our intent for getting image
     private fun getImage(){
         binding.imgava.setOnClickListener {
             val intent = Intent(Intent.ACTION_GET_CONTENT)
@@ -59,6 +67,7 @@ class SignUpFragment : Fragment(),SignUpView {
 
 
     }
+    //here is our intent which is getting the uri
     val activityResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()){
         if (it.resultCode==RESULT_OK){
             it.data?.data?.let { gotUri->
@@ -68,17 +77,23 @@ class SignUpFragment : Fragment(),SignUpView {
         }
     }
 
+    //TODO signUp function
     private fun signUp(){
         binding.apply {
             btSignUp.setOnClickListener {
+                val username = edUsernameSignUp.text.toString()
                 val email = edEmailSignUp.text.toString()
                 val pass = edPassSignUp.text.toString()
                 val repeatpass = edPassRepeat.text.toString()
                 val uri = uri
-                val user = User(email,pass,repeatpass,uri.toString())
+                val user = User(username,email,pass,repeatpass,uri.toString())
                 lifecycleScope.launch{
                     async {
-                        presenter.signUp(user,uri)
+                        if (uri!=null){
+                            presenter.signUp(user, uri)
+                        }else{
+                            message("please, choose the profile image")
+                        }
                     }
 
                 }
@@ -90,6 +105,9 @@ class SignUpFragment : Fragment(),SignUpView {
 
 
 
+    //TODO funcs for navigation
+
+    //go to login fragment if user has an account
     private fun goToLogin(){
         binding.apply {
             tvGoToSignIn.setOnClickListener {
@@ -98,9 +116,16 @@ class SignUpFragment : Fragment(),SignUpView {
         }
     }
 
+    //go to home activity if user made an account or logged in
     override fun goToHomeActivity() {
         val intent = Intent(context,HomeActivity::class.java)
         startActivity(intent)
+    }
+
+    override fun showProgress() {
+        binding.prBar.apply {
+            visibility = View.VISIBLE
+        }
     }
 
     override fun message(message: String) {

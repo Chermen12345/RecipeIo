@@ -5,39 +5,40 @@ import com.example.recipeio.Consts.AUTH
 import com.example.recipeio.Consts.REF
 import com.example.recipeio.Consts.STORAGE
 import com.example.recipeio.model.User
-import com.example.recipeio.view.interfaces.SignUpView
+
 
 class SignUpPresenterImpl(): SignUpPresenter {
     private lateinit var view: SignUpView
-    override suspend fun signUp(user: User,uri: Uri?) {
-        if (user.email.isNotEmpty()&&user.password.isNotEmpty()){
-            if (user.password.equals(user.repeatPassword)){
-                AUTH.createUserWithEmailAndPassword(user.email,user.password).addOnCompleteListener {emailandpass->
-                    if (emailandpass.isSuccessful){
-                        REF.child("users/${AUTH.currentUser!!.uid}").setValue(user).addOnSuccessListener {
-                        if (uri!=null){
-                            STORAGE.child(AUTH.currentUser!!.uid).putFile(uri!!).addOnSuccessListener {
-                                view.message("Sign Up successfully")
-                                view.goToHomeActivity()
-                            }.addOnFailureListener{
-                                view.message(it.message.toString())
+
+    override suspend fun signUp(user: User,uri: Uri) {
+        user.apply {
+            if (email.isNotEmpty()&&password.isNotEmpty()&&repeatPassword.isNotEmpty()){
+                if (password.equals(repeatPassword)){
+                    view.showProgress()
+                    AUTH.createUserWithEmailAndPassword(email, password).addOnCompleteListener { emailreg->
+                        if (emailreg.isSuccessful){
+                            REF.child("users/${AUTH.currentUser!!.uid}").setValue(user).addOnCompleteListener {refreg->
+                                if (refreg.isSuccessful){
+                                    STORAGE.child("users/profileimages/${AUTH.currentUser!!.uid}").putFile(uri).addOnSuccessListener {
+                                        view.message("sign up successfully")
+                                        view.goToHomeActivity()
+                                    }.addOnFailureListener{
+                                        view.message(it.message.toString())
+                                    }
+                                }else{
+                                    view.message(refreg.exception!!.message.toString())
+                                }
                             }
                         }else{
-                            view.message("please, choose the profile image")
+                            view.message(emailreg.exception!!.message.toString())
                         }
-
-                        }.addOnFailureListener {
-                            view.message(it.message.toString())
-                        }
-                    }else{
-                        view.message(emailandpass.exception!!.message.toString())
                     }
+                }else{
+                    view.message("your passwords are not the same")
                 }
             }else{
-                view.message("your passwords are not the same")
+                view.message("please, fill all the fields")
             }
-        }else{
-            view.message("something is empty")
         }
     }
 

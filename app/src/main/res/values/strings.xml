@@ -22,4 +22,10 @@
     <string name="repeatpass">Repeat password</string>
     <string name="makeanaccount">Create an account</string>
     <string name="alreadyhaveacc">already have an account?</string>
+    <string name="edusername">Username</string>
+    <!-- forgot pass fragment strs-->
+    <string name="pass_recovery_tv">Password recovery</string>
+    <string name="pass_recovery_tv2">Enter your email to recover your password</string>
+    <string name="signinbt">Sign In</string>
+
 </resources>

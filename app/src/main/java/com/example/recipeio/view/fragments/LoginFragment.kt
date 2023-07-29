@@ -1,6 +1,5 @@
 package com.example.recipeio.view.fragments
 
-import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -13,14 +12,17 @@ import androidx.navigation.fragment.findNavController
 import com.example.recipeio.R
 import com.example.recipeio.databinding.FragmentLoginBinding
 import com.example.recipeio.presenter.LoginPresenterImpl
+import com.example.recipeio.presenter.LoginView
 
 import com.example.recipeio.view.activities.HomeActivity
-import com.example.recipeio.view.interfaces.LoginView
+
 import kotlinx.coroutines.launch
 
 
-class LoginFragment : Fragment(),LoginView {
+class LoginFragment : Fragment(), LoginView {
+    //binding variable
     private lateinit var binding: FragmentLoginBinding
+    //presenter init
     private val presenter = LoginPresenterImpl()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,13 +39,19 @@ class LoginFragment : Fragment(),LoginView {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        //navigation
         goToSignUp()
+        goToForgotPassFr()
 
 
-
+        //login
         presenter.attach(this)
         login()
     }
+
+    //TODO navigation funs
+
+    //user doesnt have an account
     private fun goToSignUp(){
         binding.apply {
             tvGoToSignUp.setOnClickListener {
@@ -51,14 +59,26 @@ class LoginFragment : Fragment(),LoginView {
             }
         }
     }
+    //user logged in successfully
+    override fun goToHomeActivity() {
+        val intent = Intent(context,HomeActivity::class.java)
+        startActivity(intent)
+    }
+    //user forgot password and goes to forgot pass fragment
+    private fun goToForgotPassFr(){
+        binding.tvForgotPass.setOnClickListener {
+            val bundle = Bundle()
+            val email = binding.edEmailLogin.text.toString()
+            bundle.putString("email_forgot_pass",email)
+            findNavController().navigate(R.id.action_loginFragment_to_forgotPassFragment,bundle)
+        }
+    }
 
 
 
 
 
-
-
-
+    //TODO main function login
     private fun login(){
         binding.apply {
             btLogin.setOnClickListener {
@@ -69,11 +89,15 @@ class LoginFragment : Fragment(),LoginView {
         }
     }
 
-    override fun goToHomeActivity() {
-        val intent = Intent(context,HomeActivity::class.java)
-        startActivity(intent)
+
+
+    //TODO utils
+    //show progress bar until the login is successful
+    override fun showProgress() {
+        binding.prbar.visibility = View.VISIBLE
     }
 
+    //toast message
     override fun message(message: String) {
         Toast.makeText(context,message, Toast.LENGTH_LONG).show()
     }

@@ -43,5 +43,9 @@
         <action
             android:id="@+id/action_forgotPassFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
+        <argument
+            android:name="email"
+            app:argType="string"
+            android:defaultValue='""' />
     </fragment>
 </navigation>
