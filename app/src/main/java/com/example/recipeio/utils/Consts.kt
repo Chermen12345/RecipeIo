@@ -1,4 +1,4 @@
-package com.example.recipeio
+package com.example.recipeio.utils
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.ktx.database

@@ -1,7 +1,7 @@
 package com.example.recipeio.presenter
 
-import com.example.recipeio.Consts.AUTH
-import com.example.recipeio.Consts.REF
+import com.example.recipeio.utils.Consts.AUTH
+import com.example.recipeio.utils.Consts.REF
 
 
 class LoginPresenterImpl(): LoginPresenter {

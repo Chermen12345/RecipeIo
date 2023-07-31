@@ -1,4 +1,4 @@
-package com.example.recipeio.view.fragments
+package com.example.recipeio.view.fragments.regfrs
 
 import android.content.Intent
 import android.os.Bundle
@@ -11,6 +11,7 @@ import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import com.example.recipeio.R
 import com.example.recipeio.databinding.FragmentLoginBinding
+
 import com.example.recipeio.presenter.LoginPresenterImpl
 import com.example.recipeio.presenter.LoginView
 

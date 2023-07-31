@@ -1,10 +1,11 @@
 package com.example.recipeio.presenter
 
 import android.net.Uri
-import com.example.recipeio.Consts.AUTH
-import com.example.recipeio.Consts.REF
-import com.example.recipeio.Consts.STORAGE
+
 import com.example.recipeio.model.User
+import com.example.recipeio.utils.Consts.AUTH
+import com.example.recipeio.utils.Consts.REF
+import com.example.recipeio.utils.Consts.STORAGE
 
 
 class SignUpPresenterImpl(): SignUpPresenter {

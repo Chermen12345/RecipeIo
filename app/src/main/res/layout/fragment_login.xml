@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".view.fragments.LoginFragment">
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -98,6 +99,7 @@
             android:hint="@string/edEmail"
             android:inputType="text|textEmailAddress"
             android:paddingLeft="20dp"
+            android:textColor="@color/black"
             android:textColorHint="@color/secondarytext"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -119,12 +121,14 @@
             android:hint="@string/edPassword"
             android:inputType="text|textPassword"
             android:paddingLeft="20dp"
+            android:textColor="@color/black"
             android:textColorHint="@color/secondarytext"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/edEmailLogin"
             app:layout_constraintVertical_bias="0.0" />
+
         <TextView
             android:id="@+id/tvForgotPass"
             android:layout_width="wrap_content"

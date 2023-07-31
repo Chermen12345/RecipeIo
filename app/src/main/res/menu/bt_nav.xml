@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item android:title="home" android:icon="@drawable/img_5"
+        app:showAsAction="ifRoom"
+        android:id="@+id/homefr"/>
+    <item android:title="Search" android:icon="@drawable/img_8"
+        app:showAsAction="ifRoom"
+        android:id="@+id/searchfr"/>
+    <item android:title="upload"
+        android:id="@+id/uploadfr"/>
+    <item android:title="Notification" android:icon="@drawable/img_9"
+        app:showAsAction="ifRoom"
+        android:id="@+id/notfr"/>
+    <item android:title="Profile" android:icon="@drawable/img_10"
+        app:showAsAction="ifRoom"
+        android:id="@+id/profilefr"/>
+
+</menu>

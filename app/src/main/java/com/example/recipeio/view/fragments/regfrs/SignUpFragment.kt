@@ -1,4 +1,4 @@
-package com.example.recipeio.view.fragments
+package com.example.recipeio.view.fragments.regfrs
 
 import android.app.Activity.RESULT_OK
 import android.content.Intent
