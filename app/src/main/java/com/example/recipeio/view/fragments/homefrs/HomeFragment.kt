@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.recipeio.R
@@ -16,7 +17,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 
 
-class HomeFragment : Fragment() {
+class HomeFragment : Fragment(){
     private lateinit var binding: FragmentHomeBinding
     private lateinit var adapter: RecipeAdapter
     private val list = arrayListOf<Recipe>()
@@ -35,9 +36,39 @@ class HomeFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        searchRecipes()
+
+
         getRecipes()
 
     }
+
+    private fun searchRecipes() {
+        binding.apply {
+            searchRecipes.setOnQueryTextListener(object : OnQueryTextListener{
+                override fun onQueryTextSubmit(query: String?): Boolean {
+
+                    return false
+                }
+
+                override fun onQueryTextChange(newText: String?): Boolean {
+                    if (newText!=null){
+                        val filteredlist = list.filter {recipe ->
+                            recipe.foodName.toLowerCase().contains(newText)||
+                                    recipe.description.toLowerCase().contains(newText)||
+                                    recipe.username.toLowerCase().contains(newText)||
+                                    recipe.description.toLowerCase().contains(newText)
+                        }
+                        val filteredAdapter = RecipeAdapter(filteredlist as ArrayList<Recipe>)
+                        binding.rcRecipes.adapter = filteredAdapter
+                    }
+                    return true
+                }
+
+            })
+        }
+    }
+
     private fun getRecipes(){
         REF.child("recipes").addValueEventListener(object : ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
