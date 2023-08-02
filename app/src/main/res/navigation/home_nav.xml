@@ -13,9 +13,7 @@
         <action
             android:id="@+id/action_homeFragment_to_searchFragment"
             app:destination="@id/searchfr" />
-        <action
-            android:id="@+id/action_homeFragment_to_uploadFragment"
-            app:destination="@id/uploadfr" />
+
         <action
             android:id="@+id/action_homeFragment_to_notificationFragment"
             app:destination="@id/notfr" />
@@ -31,9 +29,7 @@
         <action
             android:id="@+id/action_searchFragment_to_homeFragment"
             app:destination="@id/homefr" />
-        <action
-            android:id="@+id/action_searchFragment_to_uploadFragment"
-            app:destination="@id/uploadfr" />
+
         <action
             android:id="@+id/action_searchFragment_to_notificationFragment"
             app:destination="@id/notfr" />
@@ -41,32 +37,13 @@
             android:id="@+id/action_searchFragment_to_profileFragment"
             app:destination="@id/profilefr" />
     </fragment>
-    <fragment
-        android:id="@+id/uploadfr"
-        android:name="com.example.recipeio.view.fragments.homefrs.UploadFragment"
-        android:label="fragment_upload"
-        tools:layout="@layout/fragment_upload" >
-        <action
-            android:id="@+id/action_uploadFragment_to_homeFragment"
-            app:destination="@id/homefr" />
-        <action
-            android:id="@+id/action_uploadFragment_to_searchFragment"
-            app:destination="@id/searchfr" />
-        <action
-            android:id="@+id/action_uploadFragment_to_notificationFragment"
-            app:destination="@id/notfr" />
-        <action
-            android:id="@+id/action_uploadFragment_to_profileFragment"
-            app:destination="@id/profilefr" />
-    </fragment>
+
     <fragment
         android:id="@+id/notfr"
         android:name="com.example.recipeio.view.fragments.homefrs.NotificationFragment"
         android:label="fragment_notification"
         tools:layout="@layout/fragment_notification" >
-        <action
-            android:id="@+id/action_notificationFragment_to_uploadFragment"
-            app:destination="@id/uploadfr" />
+
         <action
             android:id="@+id/action_notificationFragment_to_homeFragment"
             app:destination="@id/homefr" />
@@ -88,9 +65,7 @@
         <action
             android:id="@+id/action_profileFragment_to_searchFragment"
             app:destination="@id/searchfr" />
-        <action
-            android:id="@+id/action_profileFragment_to_uploadFragment"
-            app:destination="@id/uploadfr" />
+
         <action
             android:id="@+id/action_profileFragment_to_notificationFragment"
             app:destination="@id/notfr" />

@@ -1,6 +1,7 @@
 package com.example.recipeio.view.fragments.regfrs
 
 import android.app.Activity.RESULT_OK
+import android.app.Activity.STORAGE_SERVICE
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -17,6 +18,9 @@ import com.example.recipeio.databinding.FragmentSignUpBinding
 import com.example.recipeio.model.User
 import com.example.recipeio.presenter.SignUpPresenterImpl
 import com.example.recipeio.presenter.SignUpView
+import com.example.recipeio.utils.Consts
+import com.example.recipeio.utils.Consts.AUTH
+import com.example.recipeio.utils.Consts.STORAGE
 import com.example.recipeio.view.activities.HomeActivity
 
 import kotlinx.coroutines.async
@@ -87,20 +91,22 @@ class SignUpFragment : Fragment(), SignUpView {
                 val repeatpass = edPassRepeat.text.toString()
                 val uri = uri
                 val user = User(username,email,pass,repeatpass,uri.toString())
+
                 lifecycleScope.launch{
                     async {
                         if (uri!=null){
-                            presenter.signUp(user, uri)
+                            presenter.signUp(user)
                         }else{
                             message("please, choose the profile image")
                         }
-                    }
+                    }.await()
 
                 }
 
             }
         }
     }
+
 
 
 
@@ -130,6 +136,10 @@ class SignUpFragment : Fragment(), SignUpView {
 
     override fun message(message: String) {
         Toast.makeText(context,message,Toast.LENGTH_LONG).show()
+    }
+
+    override fun hideProgress() {
+        binding.prBar.visibility = View.GONE
     }
 
 

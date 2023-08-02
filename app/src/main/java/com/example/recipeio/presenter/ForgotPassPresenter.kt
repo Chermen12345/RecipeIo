@@ -6,5 +6,5 @@ interface ForgotPassPresenter {
 }
 interface ForgotPassView {
     fun goBack()
-    fun message(message: String)
+    fun message(string: String)
 }

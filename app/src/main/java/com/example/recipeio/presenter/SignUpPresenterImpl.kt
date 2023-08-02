@@ -1,6 +1,7 @@
 package com.example.recipeio.presenter
 
 import android.net.Uri
+import androidx.core.net.toUri
 
 import com.example.recipeio.model.User
 import com.example.recipeio.utils.Consts.AUTH
@@ -11,34 +12,46 @@ import com.example.recipeio.utils.Consts.STORAGE
 class SignUpPresenterImpl(): SignUpPresenter {
     private lateinit var view: SignUpView
 
-    override suspend fun signUp(user: User,uri: Uri) {
+    override suspend fun signUp(user: User) {
         user.apply {
-            if (email.isNotEmpty()&&password.isNotEmpty()&&repeatPassword.isNotEmpty()){
-                if (password.equals(repeatPassword)){
-                    view.showProgress()
-                    AUTH.createUserWithEmailAndPassword(email, password).addOnCompleteListener { emailreg->
-                        if (emailreg.isSuccessful){
-                            REF.child("users/${AUTH.currentUser!!.uid}").setValue(user).addOnCompleteListener {refreg->
-                                if (refreg.isSuccessful){
-                                    STORAGE.child("users/profileimages/${AUTH.currentUser!!.uid}").putFile(uri).addOnSuccessListener {
+            if (email.isNotEmpty()&&password.isNotEmpty()&&repeatPassword.isNotEmpty()&&username.isNotEmpty()){
+                view.showProgress()
+                AUTH.createUserWithEmailAndPassword(email, password).addOnCompleteListener {emAuth->
+                if (emAuth.isSuccessful){
+                    STORAGE.child("users/profileImages/${AUTH.currentUser!!.uid}").putFile(uri.toUri()).addOnCompleteListener{putimg->
+                        if (putimg.isSuccessful){
+                            STORAGE.child("users/profileImages/${AUTH.currentUser!!.uid}").downloadUrl.addOnSuccessListener {url->
+                                val map = hashMapOf<String,String>()
+                                map["username"] = username
+                                map["email"] = email
+                                map["password"] = password
+                                map["repeatPassword"] = repeatPassword
+                                map["uri"] = url.toString()
+                                REF.child("users/${AUTH.currentUser!!.uid}").setValue(map).addOnCompleteListener {ref->
+                                    if (ref.isSuccessful){
+                                        view.hideProgress()
                                         view.message("sign up successfully")
                                         view.goToHomeActivity()
-                                    }.addOnFailureListener{
-                                        view.message(it.message.toString())
+                                    }else{
+                                        view.hideProgress()
+                                        view.message(ref.exception!!.message.toString())
                                     }
-                                }else{
-                                    view.message(refreg.exception!!.message.toString())
                                 }
                             }
                         }else{
-                            view.message(emailreg.exception!!.message.toString())
+
+                            view.hideProgress()
+                          view.message(putimg.exception!!.message.toString())
                         }
                     }
                 }else{
-                    view.message("your passwords are not the same")
+                    view.hideProgress()
+                    view.message(emAuth.exception!!.message.toString())
+                }
+
                 }
             }else{
-                view.message("please, fill all the fields")
+                view.message("you should fill all places")
             }
         }
     }

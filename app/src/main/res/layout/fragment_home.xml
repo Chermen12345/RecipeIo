@@ -5,12 +5,27 @@
     android:layout_height="match_parent"
     tools:context=".HomeFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white"
-        android:text="@string/hello_blank_fragment"
-        android:textColor="#000000" />
+        android:orientation="vertical">
 
+        <SearchView
+            android:id="@+id/searchRecipes"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginLeft="25dp"
+            android:layout_marginRight="25dp"
+            android:background="@drawable/search"
+            android:closeIcon="@drawable/img_14"
+            android:queryHint="search"
+            android:searchHintIcon="@drawable/img_13"
+            android:searchIcon="@drawable/img_13" />
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rcRecipes"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </LinearLayout>
 </FrameLayout>

@@ -5,12 +5,21 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.recyclerview.widget.GridLayoutManager
 import com.example.recipeio.R
+import com.example.recipeio.databinding.FragmentHomeBinding
+import com.example.recipeio.model.Recipe
+import com.example.recipeio.utils.Consts.REF
+import com.example.recipeio.view.adapters.RecipeAdapter
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
 
 
 class HomeFragment : Fragment() {
-
-
+    private lateinit var binding: FragmentHomeBinding
+    private lateinit var adapter: RecipeAdapter
+    private val list = arrayListOf<Recipe>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -20,8 +29,36 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_home, container, false)
+        binding = FragmentHomeBinding.inflate(inflater)
+        return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        getRecipes()
+
+    }
+    private fun getRecipes(){
+        REF.child("recipes").addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                list.clear()
+                for (ds in snapshot.children){
+                    val value = ds.getValue(Recipe::class.java)
+                    if (value!=null){
+                        list.add(value)
+                    }
+
+                }
+                adapter = RecipeAdapter(list)
+                binding.rcRecipes.adapter = adapter
+                binding.rcRecipes.layoutManager = GridLayoutManager(context,2)
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
 

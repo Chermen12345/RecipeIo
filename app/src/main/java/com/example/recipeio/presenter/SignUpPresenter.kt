@@ -5,12 +5,13 @@ import com.example.recipeio.model.User
 
 
 interface SignUpPresenter {
-    suspend fun signUp(user: User,uri: Uri)
+    suspend fun signUp(user: User)
     fun attach(view:SignUpView)
 }
 interface SignUpView {
     fun goToHomeActivity()
     fun showProgress()
-    fun message(message: String)
+    fun message(string: String)
+    fun hideProgress()
 
 }

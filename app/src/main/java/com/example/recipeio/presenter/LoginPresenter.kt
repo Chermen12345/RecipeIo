@@ -11,5 +11,5 @@ interface LoginPresenter {
 interface LoginView {
     fun goToHomeActivity()
     fun showProgress()
-    fun message(message: String)
+    fun message(string: String)
 }

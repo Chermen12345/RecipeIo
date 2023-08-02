@@ -1,5 +1,6 @@
 package com.example.recipeio.view.activities
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.navigation.findNavController
@@ -16,11 +17,19 @@ class HomeActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setUpNavigation()
+        goToUpLoadActivity()
     }
     private fun setUpNavigation(){
         binding.apply {
             val navigation = findNavController(R.id.navhost)
             btnav.setupWithNavController(navigation)
         }
+    }
+    private fun goToUpLoadActivity(){
+        binding.fab.setOnClickListener {
+            val intent = Intent(this,UploadActivity::class.java)
+            startActivity(intent)
+        }
+
     }
 }
