@@ -4,6 +4,7 @@ import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.lifecycleScope
@@ -44,6 +45,10 @@ class UploadActivity : AppCompatActivity(), UploadView {
         getImages()
 
         getUser()
+
+
+        //navigation
+        goBack()
     }
 
 
@@ -55,22 +60,48 @@ class UploadActivity : AppCompatActivity(), UploadView {
     private fun uploadRecipe(){
         binding.apply {
             btUpload.setOnClickListener {
-                val name = edfoodname.text.toString()
-                val desc = eddescription.text.toString()
-                val ingr = edingredients.text.toString()
-                val uid = AUTH.currentUser!!.uid
+                if (checkdrink.isChecked || checkfood.isChecked){
+                    if (checkdrink.isChecked){
+                        val name = edfoodname.text.toString()
+                        val desc = eddescription.text.toString()
+                        val ingr = edingredients.text.toString()
+                        val uid = AUTH.currentUser!!.uid
 
-                if (image!=null){
-                    val recipe = Recipe(desc, name,image.toString(),ingr,uid ,imageprofile,username)
-                    lifecycleScope.launch(Dispatchers.Main){
-                        presenter.insertRecipe(recipe)
+                        if (image!=null){
+                            val recipe = Recipe(desc, name,image.toString(),ingr,uid ,imageprofile,username,"drink")
+                            lifecycleScope.launch(Dispatchers.Main){
+                                presenter.insertRecipe(recipe)
+                            }
+                        }else{
+                            message("choose image")
+                        }
                     }
+                    if (checkfood.isChecked){
+                        val name = edfoodname.text.toString()
+                        val desc = eddescription.text.toString()
+                        val ingr = edingredients.text.toString()
+                        val uid = AUTH.currentUser!!.uid
+
+                        if (image!=null){
+                            val recipe = Recipe(desc, name,image.toString(),ingr,uid ,imageprofile,username,"food")
+                            lifecycleScope.launch(Dispatchers.Main){
+                                presenter.insertRecipe(recipe)
+                            }
+                        }else{
+                            message("choose image")
+                        }
+                    }
+
+                }else if (checkfood.isChecked&&checkdrink.isChecked){
+                    message("please, choose only one category")
                 }else{
-                    message("choose image")
+                    message("please, choose one of the categories")
                 }
 
 
+
             }
+
         }
     }
 
@@ -87,6 +118,15 @@ class UploadActivity : AppCompatActivity(), UploadView {
     override fun message(string: String) {
         Toast.makeText(this,string,Toast.LENGTH_LONG).show()
     }
+
+    override fun hideProgress() {
+        binding.progressUpload.visibility = View.GONE
+    }
+
+    override fun showProgress() {
+        binding.progressUpload.visibility = View.VISIBLE
+    }
+
     //picking images from gallery
     private fun getImages(){
         binding.img.setOnClickListener {
@@ -119,6 +159,12 @@ class UploadActivity : AppCompatActivity(), UploadView {
             }
 
         })
+    }
+
+    private fun goBack(){
+        binding.tvgoback.setOnClickListener {
+            finish()
+        }
     }
 
 

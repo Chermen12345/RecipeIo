@@ -9,4 +9,7 @@ interface UploadPresenter {
 interface UploadView{
     fun close()
     fun message(string: String)
+
+    fun hideProgress()
+    fun showProgress()
 }

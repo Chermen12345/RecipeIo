@@ -9,7 +9,8 @@ data class Recipe(
     val ingredients: String="",
     val ownerId: String="",
     val userImage: String="",
-    val username: String=""
+    val username: String="",
+    val category: String=""
 
 
 
