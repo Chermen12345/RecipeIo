@@ -20,6 +20,9 @@
         <action
             android:id="@+id/action_homeFragment_to_profileFragment"
             app:destination="@id/profilefr" />
+        <action
+            android:id="@+id/action_homefr_to_detailesFragment"
+            app:destination="@id/detailesFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchfr"
@@ -36,6 +39,9 @@
         <action
             android:id="@+id/action_searchFragment_to_profileFragment"
             app:destination="@id/profilefr" />
+        <action
+            android:id="@+id/action_searchfr_self"
+            app:destination="@id/searchfr" />
     </fragment>
 
     <fragment
@@ -53,6 +59,9 @@
         <action
             android:id="@+id/action_notificationFragment_to_profileFragment"
             app:destination="@id/profilefr" />
+        <action
+            android:id="@+id/action_notfr_to_detailesFragment"
+            app:destination="@id/detailesFragment" />
     </fragment>
     <fragment
         android:id="@+id/profilefr"
@@ -69,5 +78,31 @@
         <action
             android:id="@+id/action_profileFragment_to_notificationFragment"
             app:destination="@id/notfr" />
+        <action
+            android:id="@+id/action_profilefr_to_detailesFragment"
+            app:destination="@id/detailesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/detailesFragment"
+        android:name="com.example.recipeio.view.fragments.homefrs.DetailesFragment"
+        android:label="fragment_detailes"
+        tools:layout="@layout/fragment_detailes" >
+        <argument
+            android:name="recipe"
+            app:argType="com.example.recipeio.model.Recipe" />
+        <argument
+            android:name="navigation"
+            app:argType="integer"
+            android:defaultValue="0" />
+        <action
+            android:id="@+id/action_detailesFragment_to_homefr"
+            app:destination="@id/homefr" />
+        <action
+            android:id="@+id/action_detailesFragment_to_notfr"
+            app:destination="@id/notfr" />
+        <action
+            android:id="@+id/action_detailesFragment_to_profilefr"
+            app:destination="@id/profilefr" />
+
     </fragment>
 </navigation>

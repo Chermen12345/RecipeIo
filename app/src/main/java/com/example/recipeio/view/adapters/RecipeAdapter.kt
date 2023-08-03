@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import com.example.recipeio.databinding.OneRecipeBinding
 import com.example.recipeio.model.Recipe
 
-class RecipeAdapter(val list: ArrayList<Recipe>): RecyclerView.Adapter<RecipeAdapter.RecipeHolder>() {
+class RecipeAdapter(val list: ArrayList<Recipe>,val  onClick: OnClick): RecyclerView.Adapter<RecipeAdapter.RecipeHolder>() {
     inner class RecipeHolder(val binding: OneRecipeBinding): RecyclerView.ViewHolder(binding.root)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecipeHolder {
@@ -24,5 +24,13 @@ class RecipeAdapter(val list: ArrayList<Recipe>): RecyclerView.Adapter<RecipeAda
         holder.binding.tvnamehome.text = list[position].username
         Glide.with(holder.itemView).load(list[position].userImage).into(holder.binding.imgprofilehome)
         holder.binding.tvfoodname.text = list[position].foodName
+
+        holder.itemView.setOnClickListener {
+            onClick.onItemClick(list[position])
+        }
+    }
+
+    interface OnClick{
+        fun onItemClick(recipe: Recipe)
     }
 }

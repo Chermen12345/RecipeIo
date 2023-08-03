@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.recipeio.R
 import com.example.recipeio.databinding.FragmentHomeBinding
@@ -19,7 +20,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 
 
-class HomeFragment : Fragment(){
+class HomeFragment : Fragment(),RecipeAdapter.OnClick{
     //binding init
     private lateinit var binding: FragmentHomeBinding
     //adapter init
@@ -74,7 +75,7 @@ class HomeFragment : Fragment(){
                                     recipe.username.toLowerCase().contains(newText)||
                                     recipe.description.toLowerCase().contains(newText)
                         }
-                        val filteredAdapter = RecipeAdapter(filteredlist as ArrayList<Recipe>)
+                        val filteredAdapter = RecipeAdapter(filteredlist as ArrayList<Recipe>,this@HomeFragment)
                         binding.rcRecipes.adapter = filteredAdapter
                     }
                     return true
@@ -93,18 +94,18 @@ class HomeFragment : Fragment(){
                 byCategoryList = list.filter {recipe ->
                     recipe.category.toLowerCase().contains("food")
                 }
-                adapter = RecipeAdapter(byCategoryList as ArrayList<Recipe>)
+                adapter = RecipeAdapter(byCategoryList as ArrayList<Recipe>,this)
                 binding.rcRecipes.adapter = adapter
             }
             FilterType.Drink -> {
                 byCategoryList = list.filter {recipe ->
                     recipe.category.toLowerCase().contains("drink")
                 }
-                adapter = RecipeAdapter(byCategoryList as ArrayList<Recipe>)
+                adapter = RecipeAdapter(byCategoryList as ArrayList<Recipe>,this)
                 binding.rcRecipes.adapter = adapter
             }
             else -> {
-                adapter = RecipeAdapter(list)
+                adapter = RecipeAdapter(list,this)
                 binding.rcRecipes.adapter = adapter
             }
 
@@ -158,7 +159,7 @@ class HomeFragment : Fragment(){
                     }
 
                 }
-                adapter = RecipeAdapter(list)
+                adapter = RecipeAdapter(list,this@HomeFragment)
                 binding.rcRecipes.adapter = adapter
                 binding.rcRecipes.layoutManager = GridLayoutManager(context,2)
 
@@ -169,6 +170,14 @@ class HomeFragment : Fragment(){
             }
 
         })
+    }
+
+    override fun onItemClick(recipe: Recipe) {
+        val bundle = Bundle()
+        bundle.putSerializable("recipe",recipe)
+        bundle.putInt("nav_back",1)
+        findNavController().navigate(R.id.action_homefr_to_detailesFragment,bundle)
+
     }
 
 

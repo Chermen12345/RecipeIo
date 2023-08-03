@@ -1,6 +1,7 @@
 package com.example.recipeio.model
 
 import android.net.Uri
+import java.io.Serializable
 
 data class Recipe(
     val description: String="",
@@ -14,4 +15,4 @@ data class Recipe(
 
 
 
-)
+): Serializable

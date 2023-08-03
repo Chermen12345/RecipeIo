@@ -7,6 +7,8 @@ import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.recipeio.R
 import com.example.recipeio.databinding.ActivityHomeBinding
+import com.example.recipeio.model.Recipe
+import com.example.recipeio.view.adapters.RecipeAdapter
 
 class HomeActivity : AppCompatActivity() {
     private lateinit var binding: ActivityHomeBinding
@@ -32,4 +34,6 @@ class HomeActivity : AppCompatActivity() {
         }
 
     }
+
+
 }
