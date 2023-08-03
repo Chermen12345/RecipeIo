@@ -42,12 +42,11 @@ class UploadActivity : AppCompatActivity(), UploadView {
 
         //db
         uploadRecipe()
-        getImages()
-
         getUser()
 
 
-        //navigation
+        //TODO utils
+        getImages()
         goBack()
     }
 
@@ -105,26 +104,37 @@ class UploadActivity : AppCompatActivity(), UploadView {
         }
     }
 
-    //TODO navigation
+    //getting user info to put some of this to recipe db node
+    private fun getUser(){
+        REF.child("users/${AUTH.currentUser!!.uid}").addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val value = snapshot.getValue(User::class.java)
+                value?.let {
+                    username = it.username
+                    imageprofile = it.uri
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+    }
+
+    //TODO utils
+
     //close the activity and go back to home activity
 
     override fun close() {
         finish()
     }
 
-    //TODO utils
-
-    //message which shows when for example user didnt filled the whole plains
-    override fun message(string: String) {
-        Toast.makeText(this,string,Toast.LENGTH_LONG).show()
-    }
-
-    override fun hideProgress() {
-        binding.progressUpload.visibility = View.GONE
-    }
-
-    override fun showProgress() {
-        binding.progressUpload.visibility = View.VISIBLE
+    //when we click on text "Cancel", we go back
+    private fun goBack(){
+        binding.tvgoback.setOnClickListener {
+            close()
+        }
     }
 
     //picking images from gallery
@@ -144,27 +154,20 @@ class UploadActivity : AppCompatActivity(), UploadView {
 
     }
 
-    private fun getUser(){
-        REF.child("users/${AUTH.currentUser!!.uid}").addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val value = snapshot.getValue(User::class.java)
-                value?.let {
-                    username = it.username
-                    imageprofile = it.uri
-                }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        })
+    //message which shows when for example user didnt filled the whole plains
+    override fun message(string: String) {
+        Toast.makeText(this,string,Toast.LENGTH_LONG).show()
     }
 
-    private fun goBack(){
-        binding.tvgoback.setOnClickListener {
-            finish()
-        }
+    //hiding progress bar
+    override fun hideProgress() {
+        binding.progressUpload.visibility = View.GONE
+    }
+
+    //showing progressbar
+    override fun showProgress() {
+        binding.progressUpload.visibility = View.VISIBLE
     }
 
 

@@ -48,6 +48,7 @@ class StartFragment : Fragment() {
             findNavController().navigate(R.id.action_startFragment_to_loginFragment)
         }
     }
+    //if user has logged in or made an account, it doesn't require to login every time opening the app
     private fun userNotNull(){
         if (AUTH.currentUser!=null){
             val intent = Intent(context,HomeActivity::class.java)

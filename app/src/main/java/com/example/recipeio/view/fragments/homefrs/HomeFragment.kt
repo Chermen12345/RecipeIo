@@ -1,6 +1,6 @@
 package com.example.recipeio.view.fragments.homefrs
 
-import android.annotation.SuppressLint
+
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,9 +20,13 @@ import com.google.firebase.database.ValueEventListener
 
 
 class HomeFragment : Fragment(){
+    //binding init
     private lateinit var binding: FragmentHomeBinding
+    //adapter init
     private lateinit var adapter: RecipeAdapter
+    //list for adapter in usual state
     private val list = arrayListOf<Recipe>()
+    //list for adapter when user filtered by category
     private var byCategoryList: List<Recipe> ?= null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,14 +44,20 @@ class HomeFragment : Fragment(){
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        searchRecipes()
 
 
+        //getting info from db
         getRecipes()
+
+        //filtering recipes
+        searchRecipes()
         getByCategoryClick()
 
     }
 
+    //TODO filtering recipes
+
+    //here we filter recipes by text which user input(searching)
     private fun searchRecipes() {
         binding.apply {
             searchRecipes.setOnQueryTextListener(object : OnQueryTextListener{
@@ -73,30 +83,8 @@ class HomeFragment : Fragment(){
             })
         }
     }
-
-    private fun getRecipes(){
-        REF.child("recipes").addValueEventListener(object : ValueEventListener{
-            override fun onDataChange(snapshot: DataSnapshot) {
-                list.clear()
-                for (ds in snapshot.children){
-                    val value = ds.getValue(Recipe::class.java)
-                    if (value!=null){
-                        list.add(0,value)
-                    }
-
-                }
-                adapter = RecipeAdapter(list)
-                binding.rcRecipes.adapter = adapter
-                binding.rcRecipes.layoutManager = GridLayoutManager(context,2)
-
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                TODO("Not yet implemented")
-            }
-
-        })
-    }
+    //here we are checking which category was chosen by user. with enum class we check which category
+    //was chosen and in this case we filter list of our adapter by current category
 
     private fun checkStateOfCategory(type: FilterType){
         when(type){
@@ -122,7 +110,9 @@ class HomeFragment : Fragment(){
 
         }
     }
-    @SuppressLint("ResourceAsColor")
+
+    //here we execute previous function with current name of enum class or our filter type
+    //by clicking on the current button
     private fun getByCategoryClick(){
         binding.apply {
             btdrink.setOnClickListener {
@@ -132,7 +122,7 @@ class HomeFragment : Fragment(){
                 btfood.setBackgroundResource(R.drawable.button3)
                 btall.setBackgroundResource(R.drawable.button3)
 
-                btdrink.setTextColor(R.color.white)
+
             }
             btfood.setOnClickListener {
                 checkStateOfCategory(FilterType.Food)
@@ -150,6 +140,35 @@ class HomeFragment : Fragment(){
             }
         }
 
+    }
+
+
+    //TODO getting from db
+
+
+    //here we are getting all the recipes from real time database
+    private fun getRecipes(){
+        REF.child("recipes").addValueEventListener(object : ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                list.clear()
+                for (ds in snapshot.children){
+                    val value = ds.getValue(Recipe::class.java)
+                    if (value!=null){
+                        list.add(0,value)
+                    }
+
+                }
+                adapter = RecipeAdapter(list)
+                binding.rcRecipes.adapter = adapter
+                binding.rcRecipes.layoutManager = GridLayoutManager(context,2)
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
     }
 
 
