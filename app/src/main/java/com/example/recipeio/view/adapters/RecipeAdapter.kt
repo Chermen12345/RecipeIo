@@ -23,5 +23,6 @@ class RecipeAdapter(val list: ArrayList<Recipe>): RecyclerView.Adapter<RecipeAda
         holder.binding.tvdescriptionhome.text = "description: ${list[position].description}"
         holder.binding.tvnamehome.text = list[position].username
         Glide.with(holder.itemView).load(list[position].userImage).into(holder.binding.imgprofilehome)
+        holder.binding.tvfoodname.text = list[position].foodName
     }
 }
