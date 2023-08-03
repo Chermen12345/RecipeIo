@@ -6,21 +6,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.SearchView.OnQueryTextListener
+import android.widget.Toast
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.recipeio.R
 import com.example.recipeio.databinding.FragmentHomeBinding
 import com.example.recipeio.model.Recipe
+import com.example.recipeio.presenter.AddToFavPresenterImpl
+import com.example.recipeio.presenter.AddToFavView
 import com.example.recipeio.utils.Consts.REF
 import com.example.recipeio.utils.FilterType
 import com.example.recipeio.view.adapters.RecipeAdapter
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.launch
 
 
-class HomeFragment : Fragment(),RecipeAdapter.OnClick{
+class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
+    private val presenter = AddToFavPresenterImpl()
     //binding init
     private lateinit var binding: FragmentHomeBinding
     //adapter init
@@ -45,6 +51,7 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick{
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        presenter.attach(this)
 
 
         //getting info from db
@@ -178,6 +185,18 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick{
         bundle.putInt("nav_back",1)
         findNavController().navigate(R.id.action_homefr_to_detailesFragment,bundle)
 
+    }
+
+    override fun onCheckBoxClickWhenUnChecked(recipe: Recipe) {
+        lifecycleScope.launch {
+            presenter.addToFav(recipe)
+        }
+
+    }
+
+
+    override fun message(message: String) {
+        Toast.makeText(context,message,Toast.LENGTH_LONG).show()
     }
 
 
