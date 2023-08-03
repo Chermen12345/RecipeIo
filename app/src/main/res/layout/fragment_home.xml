@@ -21,7 +21,53 @@
             android:closeIcon="@drawable/img_14"
             android:queryHint="search"
             android:searchHintIcon="@drawable/img_13"
-            android:searchIcon="@drawable/img_13" />
+            android:searchIcon="@drawable/img_13">
+
+        </SearchView>
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginTop="30dp"
+            android:layout_marginBottom="25dp"
+            android:fontFamily="@font/bold"
+            android:text="Category"
+            android:textColor="@color/maintext"
+            android:textSize="24sp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <android.widget.Button
+                android:id="@+id/btall"
+                android:layout_width="68dp"
+                android:layout_height="48dp"
+                android:layout_marginLeft="25dp"
+                android:background="@drawable/button1"
+                android:text="All" />
+
+            <android.widget.Button
+                android:id="@+id/btfood"
+                android:layout_width="86dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/button3"
+                android:text="food"
+                android:textColor="@color/white" />
+
+            <android.widget.Button
+                android:id="@+id/btdrink"
+                android:layout_width="86dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="10dp"
+                android:background="@drawable/button3"
+                android:text="drink"
+                android:textColor="@color/white" />
+        </LinearLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rcRecipes"
