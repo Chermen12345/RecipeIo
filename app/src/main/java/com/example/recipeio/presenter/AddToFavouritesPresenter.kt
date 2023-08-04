@@ -3,8 +3,8 @@ package com.example.recipeio.presenter
 import com.example.recipeio.model.Recipe
 
 interface AddToFavouritesPresenter {
-    suspend fun addToFav(recipe: Recipe)
-    suspend fun deleteFromFav(recipe: Recipe)
+    suspend fun addToFavOrDelete(recipe: Recipe,wasAtFav: Boolean)
+
     fun attach(view: AddToFavView)
 }
 interface AddToFavView{

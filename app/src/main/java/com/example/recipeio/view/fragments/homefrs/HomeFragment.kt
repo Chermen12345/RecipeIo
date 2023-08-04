@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 
 
 class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
+    //presenter with all io functions
     private val presenter = AddToFavPresenterImpl()
     //binding init
     private lateinit var binding: FragmentHomeBinding
@@ -35,6 +36,9 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
     private val list = arrayListOf<Recipe>()
     //list for adapter when user filtered by category
     private var byCategoryList: List<Recipe> ?= null
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -63,6 +67,9 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
 
     }
 
+
+
+
     //TODO filtering recipes
 
     //here we filter recipes by text which user input(searching)
@@ -75,21 +82,27 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
                 }
 
                 override fun onQueryTextChange(newText: String?): Boolean {
+
                     if (newText!=null){
+
                         val filteredlist = list.filter {recipe ->
                             recipe.foodName.toLowerCase().contains(newText)||
                                     recipe.description.toLowerCase().contains(newText)||
                                     recipe.username.toLowerCase().contains(newText)||
                                     recipe.description.toLowerCase().contains(newText)
                         }
+
                         val filteredAdapter = RecipeAdapter(filteredlist as ArrayList<Recipe>,this@HomeFragment)
                         binding.rcRecipes.adapter = filteredAdapter
+
                     }
                     return true
                 }
 
             })
+
         }
+
     }
     //here we are checking which category was chosen by user. with enum class we check which category
     //was chosen and in this case we filter list of our adapter by current category
@@ -104,6 +117,7 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
                 adapter = RecipeAdapter(byCategoryList as ArrayList<Recipe>,this)
                 binding.rcRecipes.adapter = adapter
             }
+
             FilterType.Drink -> {
                 byCategoryList = list.filter {recipe ->
                     recipe.category.toLowerCase().contains("drink")
@@ -111,6 +125,7 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
                 adapter = RecipeAdapter(byCategoryList as ArrayList<Recipe>,this)
                 binding.rcRecipes.adapter = adapter
             }
+
             else -> {
                 adapter = RecipeAdapter(list,this)
                 binding.rcRecipes.adapter = adapter
@@ -123,7 +138,9 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
     //by clicking on the current button
     private fun getByCategoryClick(){
         binding.apply {
+
             btdrink.setOnClickListener {
+
                 checkStateOfCategory(FilterType.Drink)
 
                 btdrink.setBackgroundResource(R.drawable.button1)
@@ -133,13 +150,16 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
 
             }
             btfood.setOnClickListener {
+
                 checkStateOfCategory(FilterType.Food)
 
                 btfood.setBackgroundResource(R.drawable.button1)
                 btdrink.setBackgroundResource(R.drawable.button3)
                 btall.setBackgroundResource(R.drawable.button3)
             }
+
             btall.setOnClickListener {
+
                 checkStateOfCategory(FilterType.Whole)
 
                 btall.setBackgroundResource(R.drawable.button1)
@@ -157,15 +177,20 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
     //here we are getting all the recipes from real time database
     private fun getRecipes(){
         REF.child("recipes").addValueEventListener(object : ValueEventListener{
+
             override fun onDataChange(snapshot: DataSnapshot) {
+
                 list.clear()
+
                 for (ds in snapshot.children){
                     val value = ds.getValue(Recipe::class.java)
+
                     if (value!=null){
                         list.add(0,value)
                     }
 
                 }
+
                 adapter = RecipeAdapter(list,this@HomeFragment)
                 binding.rcRecipes.adapter = adapter
                 binding.rcRecipes.layoutManager = GridLayoutManager(context,2)
@@ -179,21 +204,34 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
         })
     }
 
+    //TODO click on item,we will go on detailes fragment
     override fun onItemClick(recipe: Recipe) {
+
         val bundle = Bundle()
         bundle.putSerializable("recipe",recipe)
         bundle.putInt("nav_back",1)
+
         findNavController().navigate(R.id.action_homefr_to_detailesFragment,bundle)
 
     }
 
-    override fun onCheckBoxClickWhenUnChecked(recipe: Recipe) {
+    //TODO when you click on save check box
+
+    //when checkbox is unchecked , you will save it
+    override fun onCheckBoxClick(recipe: Recipe,wasAtFav:Boolean) {
+
         lifecycleScope.launch {
-            presenter.addToFav(recipe)
+            presenter.addToFavOrDelete(recipe,wasAtFav)
         }
 
     }
 
+
+
+
+    //TODO utils
+
+    //output of message
 
     override fun message(message: String) {
         Toast.makeText(context,message,Toast.LENGTH_LONG).show()

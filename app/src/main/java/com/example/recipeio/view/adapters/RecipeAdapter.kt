@@ -31,18 +31,23 @@ class RecipeAdapter(val list: ArrayList<Recipe>,val  onClick: OnClick): Recycler
         holder.itemView.setOnClickListener {
             onClick.onItemClick(list[position])
         }
-        holder.binding.checkBox2.apply {
-            when(isChecked){
-                true->{}
-                false->{onClick.onCheckBoxClickWhenUnChecked(list[position])}
+        holder.binding.checkBox2.setOnClickListener {
+            holder.binding.checkBox2.apply {
+                when(isChecked){
+                    false->{onClick.onCheckBoxClick(list[position],isChecked)}
+                    true->{onClick.onCheckBoxClick(list[position],isChecked)}
+                }
             }
         }
+
 
     }
 
     interface OnClick{
         fun onItemClick(recipe: Recipe)
-        fun onCheckBoxClickWhenUnChecked(recipe: Recipe)
+        fun onCheckBoxClick(recipe: Recipe,wasAtFav: Boolean)
+
+
 
     }
 }
