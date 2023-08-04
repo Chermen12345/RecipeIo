@@ -2,9 +2,6 @@ package com.example.recipeio.view.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.CompoundButton
-import android.widget.RadioGroup
-import android.widget.RadioGroup.OnCheckedChangeListener
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.recipeio.databinding.OneRecipeBinding
@@ -31,23 +28,18 @@ class RecipeAdapter(val list: ArrayList<Recipe>,val  onClick: OnClick): Recycler
         holder.itemView.setOnClickListener {
             onClick.onItemClick(list[position])
         }
-        holder.binding.checkBox2.setOnClickListener {
-            holder.binding.checkBox2.apply {
-                when(isChecked){
-                    false->{onClick.onCheckBoxClick(list[position],isChecked)}
-                    true->{onClick.onCheckBoxClick(list[position],isChecked)}
-                }
+        holder.binding.checkBox2.apply {
+            when(isChecked){
+                true->{}
+                false->{onClick.onCheckBoxClickWhenUnChecked(list[position])}
             }
         }
-
 
     }
 
     interface OnClick{
         fun onItemClick(recipe: Recipe)
-        fun onCheckBoxClick(recipe: Recipe,wasAtFav: Boolean)
-
-
+        fun onCheckBoxClickWhenUnChecked(recipe: Recipe)
 
     }
 }

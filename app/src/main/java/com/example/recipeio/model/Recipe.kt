@@ -11,7 +11,7 @@ data class Recipe(
     val ownerId: String="",
     val userImage: String="",
     val username: String="",
-    val category: String="",
+    val category: String=""
 
 
 
