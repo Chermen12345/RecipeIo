@@ -29,10 +29,13 @@ class ProfileRecipesFragment : Fragment(), RecipeAdapter.OnClick, AddToFavView{
     //presenter
     private val presenter = AddToFavPresenterImpl()
 
+    //binding init
     private lateinit var binding: FragmentProfileRecipesBinding
 
+    //list of own recipes rcview
     private val myRecipeList = arrayListOf<Recipe>()
 
+    //own recipe rc adapter
     private lateinit var adapter: RecipeAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -51,8 +54,9 @@ class ProfileRecipesFragment : Fragment(), RecipeAdapter.OnClick, AddToFavView{
         super.onViewCreated(view, savedInstanceState)
         //view init
         presenter.attach(this)
-        //db
 
+
+        //db
         getMyRecipes()
     }
 
@@ -76,6 +80,8 @@ class ProfileRecipesFragment : Fragment(), RecipeAdapter.OnClick, AddToFavView{
                     }
 
                     adapter = RecipeAdapter(myRecipeList,this@ProfileRecipesFragment)
+
+
                     binding.apply {
                         rcownrecipes.adapter = adapter
                         rcownrecipes.layoutManager = GridLayoutManager(context,2)
@@ -98,23 +104,28 @@ class ProfileRecipesFragment : Fragment(), RecipeAdapter.OnClick, AddToFavView{
 
     override fun onItemClick(recipe: Recipe) {
         val bundle = Bundle()
+
         bundle.putSerializable("recipe",recipe)
+
         bundle.putInt("nav_back",2)
         findNavController().navigate(R.id.action_profilefr_to_detailesFragment,bundle)
     }
 
+    //TODO adding to fav when checkbox was unchecked
     override fun onCheckBoxClickWhenUnChecked(recipe: Recipe) {
         lifecycleScope.launch {
             presenter.addToFav(recipe)
         }
     }
 
+    //TODO removing from fav when checkbox was checked
     override fun onCheckBoxClickWhenChecked(recipe: Recipe) {
         lifecycleScope.launch {
             presenter.deleteFromFav(recipe)
         }
     }
 
+    //TODO utils
     override fun message(message: String) {
         Toast.makeText(context,message,Toast.LENGTH_LONG).show()
     }
