@@ -21,6 +21,7 @@ class RecipeAdapter(val list: ArrayList<Recipe>,val  onClick: OnClick): Recycler
 
 
     override fun onBindViewHolder(holder: RecipeHolder, position: Int) {
+
         Glide.with(holder.itemView).load(list[position].image).into(holder.binding.imgrecipehome)
         holder.binding.tvdescriptionhome.text = "description: ${list[position].description}"
         holder.binding.tvnamehome.text = list[position].username
@@ -30,6 +31,7 @@ class RecipeAdapter(val list: ArrayList<Recipe>,val  onClick: OnClick): Recycler
         holder.itemView.setOnClickListener {
             onClick.onItemClick(list[position])
         }
+        holder.binding.checkBox2.isChecked = onClick.isAtFav(list[position])
         holder.binding.checkBox2.setOnClickListener{
             holder.binding.checkBox2.apply {
                 when(isChecked){
@@ -43,6 +45,7 @@ class RecipeAdapter(val list: ArrayList<Recipe>,val  onClick: OnClick): Recycler
     }
 
     interface OnClick{
+        fun isAtFav(recipe: Recipe): Boolean
         fun onItemClick(recipe: Recipe)
         fun onCheckBoxClickWhenUnChecked(recipe: Recipe)
 

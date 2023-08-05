@@ -20,6 +20,7 @@
             android:layout_height="36dp"
             android:layout_marginStart="10dp"
             android:layout_marginTop="10dp"
+            app:cardBackgroundColor="@color/white"
             app:cardCornerRadius="11dp">
 
             <ImageView
@@ -44,6 +45,7 @@
         android:layout_width="151dp"
         android:layout_height="151dp"
         android:layout_margin="9dp"
+        app:cardBackgroundColor="@color/white"
         app:cardCornerRadius="16dp">
 
         <ImageView

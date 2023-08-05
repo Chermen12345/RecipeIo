@@ -85,14 +85,14 @@ class ProfileSavedFragment : Fragment() , RecipeAdapter.OnClick,AddToFavView{
         )
     }
 
-    override fun onItemClick(recipe: Recipe) {
-        val bundle = Bundle()
-
-        bundle.putSerializable("recipe",recipe)
-
-        bundle.putInt("nav_back",2)
-        findNavController().navigate(R.id.action_profilefr_to_detailesFragment,bundle)
+    override fun isAtFav(recipe: Recipe): Boolean {
+        if (likedList.contains(recipe)){
+            return true
+        }
+        return false
     }
+
+
 
     //TODO adding to fav when checkbox was unchecked
     override fun onCheckBoxClickWhenUnChecked(recipe: Recipe) {
@@ -111,5 +111,14 @@ class ProfileSavedFragment : Fragment() , RecipeAdapter.OnClick,AddToFavView{
     //TODO utils
     override fun message(message: String) {
         Toast.makeText(context,message, Toast.LENGTH_LONG).show()
+    }
+
+    override fun onItemClick(recipe: Recipe) {
+        val bundle = Bundle()
+
+        bundle.putSerializable("recipe",recipe)
+
+        bundle.putInt("nav_back",2)
+        findNavController().navigate(R.id.action_profilefr_to_detailesFragment,bundle)
     }
 }

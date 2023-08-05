@@ -16,6 +16,7 @@ import com.example.recipeio.databinding.FragmentHomeBinding
 import com.example.recipeio.model.Recipe
 import com.example.recipeio.presenter.AddToFavPresenterImpl
 import com.example.recipeio.presenter.AddToFavView
+import com.example.recipeio.utils.Consts
 import com.example.recipeio.utils.Consts.REF
 import com.example.recipeio.utils.FilterType
 import com.example.recipeio.view.adapters.RecipeAdapter
@@ -26,6 +27,8 @@ import kotlinx.coroutines.launch
 
 
 class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
+    val listOfSavedRecipes = mutableListOf<Recipe>()
+
     //presenter with all io functions
     private val presenter = AddToFavPresenterImpl()
     //binding init
@@ -61,6 +64,9 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
         //filtering recipes
         searchRecipes()
         getByCategoryClick()
+
+        //
+        getLikedRecipes()
 
     }
 
@@ -161,6 +167,7 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
             override fun onDataChange(snapshot: DataSnapshot) {
                 list.clear()
                 for (ds in snapshot.children){
+
                     val value = ds.getValue(Recipe::class.java)
                     if (value!=null){
                         list.add(0,value)
@@ -180,14 +187,19 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
         })
     }
 
-    override fun onItemClick(recipe: Recipe) {
-        val bundle = Bundle()
-        bundle.putSerializable("recipe",recipe)
-        bundle.putInt("nav_back",1)
-        findNavController().navigate(R.id.action_homefr_to_detailesFragment,bundle)
-
+    //here we are checking if the list of recipes that we liked containg current recipe in rcview
+    //we need to check it to make the check box checked in item that we liked
+    // and to make current check box unchecked when we didnt saved it
+    override fun isAtFav(recipe: Recipe): Boolean {
+        if (listOfSavedRecipes.contains(recipe)){
+            return true
+        }
+        return false
     }
 
+
+
+    //here when the checkbox is unchecked we add to fav clicking the checkbox
     override fun onCheckBoxClickWhenUnChecked(recipe: Recipe) {
         lifecycleScope.launch {
             presenter.addToFav(recipe)
@@ -195,6 +207,7 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
 
     }
 
+    //here when checkbox was checked we delete from fav by clicking the checkbox
     override fun onCheckBoxClickWhenChecked(recipe: Recipe) {
         lifecycleScope.launch {
             presenter.deleteFromFav(recipe)
@@ -202,8 +215,44 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
     }
 
 
+
+
+    //here we get the whole recipes that we liked to check in all items contain saved items to show
+    //highlighted checkbox
+    private fun getLikedRecipes(){
+        REF.child("users/${Consts.AUTH.currentUser!!.uid}/savedRecipes").addValueEventListener(
+            object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    listOfSavedRecipes.clear()
+                    for (ds in snapshot.children){
+                        val value = ds.getValue(Recipe::class.java)
+
+                        value?.let { listOfSavedRecipes.add(it) }
+
+                    }
+
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            }
+        )
+    }
+
+    //TODO utils
     override fun message(message: String) {
         Toast.makeText(context,message,Toast.LENGTH_LONG).show()
+    }
+
+    //here we go to detail fragment
+    override fun onItemClick(recipe: Recipe) {
+        val bundle = Bundle()
+        bundle.putSerializable("recipe",recipe)
+        bundle.putInt("nav_back",1)
+        findNavController().navigate(R.id.action_homefr_to_detailesFragment,bundle)
+
     }
 
 

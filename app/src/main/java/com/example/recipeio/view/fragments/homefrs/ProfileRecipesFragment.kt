@@ -15,6 +15,7 @@ import com.example.recipeio.databinding.FragmentProfileRecipesBinding
 import com.example.recipeio.model.Recipe
 import com.example.recipeio.presenter.AddToFavPresenterImpl
 import com.example.recipeio.presenter.AddToFavView
+import com.example.recipeio.utils.Consts
 import com.example.recipeio.utils.Consts.AUTH
 import com.example.recipeio.utils.Consts.REF
 import com.example.recipeio.view.adapters.RecipeAdapter
@@ -26,6 +27,9 @@ import org.koin.android.ext.android.get
 
 
 class ProfileRecipesFragment : Fragment(), RecipeAdapter.OnClick, AddToFavView{
+    //list of liked recipes,we need it to check if the whole recipes contain saved recipes and
+    //to show highlighted checkbox
+    private val likedList = arrayListOf<Recipe>()
     //presenter
     private val presenter = AddToFavPresenterImpl()
 
@@ -58,9 +62,11 @@ class ProfileRecipesFragment : Fragment(), RecipeAdapter.OnClick, AddToFavView{
 
         //db
         getMyRecipes()
+
+        getLikedRecipes()
     }
 
-    //TODO get own recipe from db
+    //TODO get own recipes from db
     private fun getMyRecipes(){
 
         REF.child("users/${AUTH.currentUser!!.uid}/myRecipes").addValueEventListener(
@@ -99,17 +105,38 @@ class ProfileRecipesFragment : Fragment(), RecipeAdapter.OnClick, AddToFavView{
         )
 
     }
+    //TODO getting Liked recipes from db
+    private fun getLikedRecipes(){
+        REF.child("users/${Consts.AUTH.currentUser!!.uid}/savedRecipes").addValueEventListener(
+            object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    likedList.clear()
+                    for (ds in snapshot.children){
+                        val value = ds.getValue(Recipe::class.java)
 
+                        value?.let { likedList.add(it) }
 
+                    }
 
-    override fun onItemClick(recipe: Recipe) {
-        val bundle = Bundle()
+                }
 
-        bundle.putSerializable("recipe",recipe)
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
 
-        bundle.putInt("nav_back",2)
-        findNavController().navigate(R.id.action_profilefr_to_detailesFragment,bundle)
+            }
+        )
     }
+
+    override fun isAtFav(recipe: Recipe): Boolean {
+        if (likedList.contains(recipe)){
+            return true
+        }
+        return false
+    }
+
+
+
 
     //TODO adding to fav when checkbox was unchecked
     override fun onCheckBoxClickWhenUnChecked(recipe: Recipe) {
@@ -128,5 +155,15 @@ class ProfileRecipesFragment : Fragment(), RecipeAdapter.OnClick, AddToFavView{
     //TODO utils
     override fun message(message: String) {
         Toast.makeText(context,message,Toast.LENGTH_LONG).show()
+    }
+
+
+    override fun onItemClick(recipe: Recipe) {
+        val bundle = Bundle()
+
+        bundle.putSerializable("recipe",recipe)
+
+        bundle.putInt("nav_back",2)
+        findNavController().navigate(R.id.action_profilefr_to_detailesFragment,bundle)
     }
 }

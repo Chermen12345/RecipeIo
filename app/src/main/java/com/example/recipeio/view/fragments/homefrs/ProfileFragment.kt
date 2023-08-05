@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import com.bumptech.glide.Glide
 import com.example.recipeio.R
@@ -18,6 +19,9 @@ import com.google.android.material.tabs.TabLayoutMediator
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 
 class ProfileFragment : Fragment() {
@@ -26,7 +30,8 @@ class ProfileFragment : Fragment() {
     //list of tablayout items
     private val tabList = listOf<String>("Recipes","Liked")
 
-
+    private lateinit var profileImage: String
+    private lateinit var profileName: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -44,7 +49,15 @@ class ProfileFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        getUserInfo()
+        lifecycleScope.launch {
+            async {
+                getUserInfo()
+            }.await()
+            delay(200)
+            putInfoUi()
+        }
+
+
 
 
         viewPager()
@@ -54,7 +67,7 @@ class ProfileFragment : Fragment() {
     //TODO get from db
 
     //get User Info from real time database
-    private fun getUserInfo(){
+    private suspend fun getUserInfo(){
         REF.child("users/${AUTH.currentUser!!.uid}").addValueEventListener(object :ValueEventListener{
             override fun onDataChange(snapshot: DataSnapshot) {
 
@@ -62,8 +75,8 @@ class ProfileFragment : Fragment() {
 
                 if (user!=null){
                     binding.apply {
-                        tvusernameprofile.text = user.username
-                        Glide.with(this@ProfileFragment).load(user.uri).into(imgprofilefr)
+                        profileName = user.username
+                        profileImage = user.uri
                     }
                 }
 
@@ -75,6 +88,11 @@ class ProfileFragment : Fragment() {
 
         })
 
+    }
+    //put the profile info to ui
+    private suspend fun putInfoUi(){
+        Glide.with(this).load(profileImage).into(binding.imgprofilefr)
+        binding.tvusernameprofile.text = profileName
     }
 
     //TODO setUp ViewPager
