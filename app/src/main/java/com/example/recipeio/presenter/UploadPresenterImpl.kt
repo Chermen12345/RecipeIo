@@ -30,8 +30,15 @@ class UploadPresenterImpl(): UploadPresenter {
                             map["category"] = recipe.category
                             REF.child("recipes/$key").setValue(map).addOnCompleteListener {reftask->
                                 if (reftask.isSuccessful){
-                                    view.message("uploaded successfully")
-                                    view.close()
+                                    REF.child("users/${AUTH.currentUser!!.uid}/myRecipes").push().setValue(map)
+                                        .addOnCompleteListener {
+                                            if (it.isSuccessful){
+                                                view.message("uploaded successfully")
+                                                view.close()
+                                            }else{
+                                                view.message(it.exception!!.message.toString())
+                                            }
+                                        }
                                 }else{
                                     view.hideProgress()
                                     view.message(reftask.exception!!.message.toString())
@@ -46,6 +53,7 @@ class UploadPresenterImpl(): UploadPresenter {
                         view.message(stortask.exception!!.message.toString())
                     }
                 }
+
             }else{
                 view.message("please choose an image")
             }
@@ -53,6 +61,9 @@ class UploadPresenterImpl(): UploadPresenter {
             view.message("please, fill all places")
         }
     }
+
+
+
     fun attach(view: UploadView){
         this.view = view
     }

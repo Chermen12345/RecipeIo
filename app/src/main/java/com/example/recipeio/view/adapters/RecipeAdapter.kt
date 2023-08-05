@@ -1,5 +1,6 @@
 package com.example.recipeio.view.adapters
 
+import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -18,6 +19,7 @@ class RecipeAdapter(val list: ArrayList<Recipe>,val  onClick: OnClick): Recycler
         return list.size
     }
 
+
     override fun onBindViewHolder(holder: RecipeHolder, position: Int) {
         Glide.with(holder.itemView).load(list[position].image).into(holder.binding.imgrecipehome)
         holder.binding.tvdescriptionhome.text = "description: ${list[position].description}"
@@ -31,7 +33,7 @@ class RecipeAdapter(val list: ArrayList<Recipe>,val  onClick: OnClick): Recycler
         holder.binding.checkBox2.setOnClickListener{
             holder.binding.checkBox2.apply {
                 when(isChecked){
-                    false->{}
+                    false->{onClick.onCheckBoxClickWhenChecked(list[position])}
                     true->{onClick.onCheckBoxClickWhenUnChecked(list[position])}
                 }
             }
@@ -43,6 +45,8 @@ class RecipeAdapter(val list: ArrayList<Recipe>,val  onClick: OnClick): Recycler
     interface OnClick{
         fun onItemClick(recipe: Recipe)
         fun onCheckBoxClickWhenUnChecked(recipe: Recipe)
+
+        fun onCheckBoxClickWhenChecked(recipe: Recipe)
 
     }
 }

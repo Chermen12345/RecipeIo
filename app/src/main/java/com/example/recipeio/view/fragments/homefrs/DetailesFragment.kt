@@ -63,7 +63,7 @@ class DetailesFragment : Fragment() {
 
     private fun setUpBottomSheetDialog(){
         BottomSheetBehavior.from(binding.btsheet).apply {
-            peekHeight = 850
+            peekHeight = 900
         }
     }
 
@@ -71,6 +71,7 @@ class DetailesFragment : Fragment() {
         binding.btbackdet.setOnClickListener {
             when(nav_back){
                 1 -> {findNavController().navigate(R.id.action_detailesFragment_to_homefr)}
+                2 -> {findNavController().navigate(R.id.action_detailesFragment_to_profilefr)}
             }
         }
 

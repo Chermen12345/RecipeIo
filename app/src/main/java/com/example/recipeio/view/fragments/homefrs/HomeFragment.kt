@@ -195,6 +195,12 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
 
     }
 
+    override fun onCheckBoxClickWhenChecked(recipe: Recipe) {
+        lifecycleScope.launch {
+            presenter.deleteFromFav(recipe)
+        }
+    }
+
 
     override fun message(message: String) {
         Toast.makeText(context,message,Toast.LENGTH_LONG).show()

@@ -5,6 +5,7 @@ import com.example.recipeio.model.Recipe
 
 interface UploadPresenter {
     suspend fun insertRecipe(recipe: Recipe)
+
 }
 interface UploadView{
     fun close()
