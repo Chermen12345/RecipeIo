@@ -166,4 +166,6 @@ class ProfileRecipesFragment : Fragment(), RecipeAdapter.OnClick, AddToFavView{
         bundle.putInt("nav_back",2)
         findNavController().navigate(R.id.action_profilefr_to_detailesFragment,bundle)
     }
+
+
 }

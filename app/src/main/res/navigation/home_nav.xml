@@ -23,6 +23,9 @@
         <action
             android:id="@+id/action_homefr_to_detailesFragment"
             app:destination="@id/detailesFragment" />
+        <action
+            android:id="@+id/action_homefr_to_usersProfileFragment"
+            app:destination="@id/usersProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/searchfr"
@@ -42,6 +45,9 @@
         <action
             android:id="@+id/action_searchfr_self"
             app:destination="@id/searchfr" />
+        <action
+            android:id="@+id/action_searchfr_to_usersProfileFragment"
+            app:destination="@id/usersProfileFragment" />
     </fragment>
 
     <fragment
@@ -62,6 +68,9 @@
         <action
             android:id="@+id/action_notfr_to_detailesFragment"
             app:destination="@id/detailesFragment" />
+        <action
+            android:id="@+id/action_notfr_to_usersProfileFragment"
+            app:destination="@id/usersProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/profilefr"
@@ -81,6 +90,9 @@
         <action
             android:id="@+id/action_profilefr_to_detailesFragment"
             app:destination="@id/detailesFragment" />
+        <action
+            android:id="@+id/action_profilefr_to_usersProfileFragment"
+            app:destination="@id/usersProfileFragment" />
     </fragment>
     <fragment
         android:id="@+id/detailesFragment"
@@ -103,6 +115,36 @@
         <action
             android:id="@+id/action_detailesFragment_to_profilefr"
             app:destination="@id/profilefr" />
+        <action
+            android:id="@+id/action_detailesFragment_to_usersProfileFragment"
+            app:destination="@id/usersProfileFragment" />
 
+    </fragment>
+    <fragment
+        android:id="@+id/usersProfileFragment"
+        android:name="com.example.recipeio.UsersProfileFragment"
+        android:label="fragment_users_profile"
+        tools:layout="@layout/fragment_users_profile" >
+        <action
+            android:id="@+id/action_usersProfileFragment_to_searchfr"
+            app:destination="@id/searchfr" />
+        <action
+            android:id="@+id/action_usersProfileFragment_to_homefr"
+            app:destination="@id/homefr" />
+        <action
+            android:id="@+id/action_usersProfileFragment_to_detailesFragment"
+            app:destination="@id/detailesFragment" />
+        <action
+            android:id="@+id/action_usersProfileFragment_to_profilefr"
+            app:destination="@id/profilefr" />
+        <action
+            android:id="@+id/action_usersProfileFragment_to_notfr"
+            app:destination="@id/notfr" />
+        <argument
+            android:name="recipe"
+            app:argType="com.example.recipeio.model.Recipe" />
+        <argument
+            android:name="wherefrom"
+            app:argType="integer" />
     </fragment>
 </navigation>

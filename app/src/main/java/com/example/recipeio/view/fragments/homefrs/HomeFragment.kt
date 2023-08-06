@@ -207,6 +207,8 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
 
     }
 
+
+
     //here when checkbox was checked we delete from fav by clicking the checkbox
     override fun onCheckBoxClickWhenChecked(recipe: Recipe) {
         lifecycleScope.launch {
@@ -253,6 +255,15 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
         bundle.putInt("nav_back",1)
         findNavController().navigate(R.id.action_homefr_to_detailesFragment,bundle)
 
+    }
+
+
+    //when we click the users image we go to users profile
+    override fun onImageClick(recipe: Recipe) {
+        val bundle = Bundle()
+        bundle.putSerializable("recipe",recipe)
+        bundle.putInt("wherefrom",1)
+        findNavController().navigate(R.id.action_homefr_to_usersProfileFragment,bundle)
     }
 
 
