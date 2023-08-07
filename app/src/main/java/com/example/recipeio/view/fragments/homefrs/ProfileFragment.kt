@@ -12,6 +12,7 @@ import com.bumptech.glide.Glide
 import com.example.recipeio.R
 import com.example.recipeio.databinding.FragmentProfileBinding
 import com.example.recipeio.model.User
+import com.example.recipeio.presenter.FollowUserView
 import com.example.recipeio.utils.Consts.AUTH
 import com.example.recipeio.utils.Consts.REF
 import com.example.recipeio.view.adapters.ProfileViewPagerAdapter
@@ -22,6 +23,7 @@ import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlin.properties.Delegates
 
 
 class ProfileFragment : Fragment() {
@@ -32,6 +34,8 @@ class ProfileFragment : Fragment() {
 
     private lateinit var profileImage: String
     private lateinit var profileName: String
+
+    private var recipesCount:Int ?= null
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -58,9 +62,16 @@ class ProfileFragment : Fragment() {
         }
 
 
+        getCountOfOwnRecipes()
+
+
 
 
         viewPager()
+
+        lifecycleScope.launch {
+            getCountFollowersAndFollowing()
+        }
     }
 
 
@@ -104,6 +115,58 @@ class ProfileFragment : Fragment() {
             }.attach()
 
         }
+    }
+
+    private fun getCountOfOwnRecipes(){
+        lifecycleScope.launch {
+            REF.child("users/${AUTH.currentUser!!.uid}/myRecipes").addValueEventListener(
+                object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        recipesCount = snapshot.children.count()
+                        binding.tvamountrecipes.text = recipesCount.toString()
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                }
+            )
+        }
+
+    }
+
+
+    //get count
+    private suspend fun getCountFollowersAndFollowing(){
+        REF.child("users/${AUTH.currentUser!!.uid}/followers").addValueEventListener(
+            object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val count = snapshot.children.count()
+                    binding.tvamountfollowers.text = count.toString()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            }
+        )
+
+
+        REF.child("users/${AUTH.currentUser!!.uid}/following").addValueEventListener(
+            object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val count = snapshot.children.count()
+                    binding.tvamountoffollowing.text = count.toString()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            }
+        )
     }
 
 

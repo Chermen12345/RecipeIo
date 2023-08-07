@@ -40,7 +40,7 @@ class ProfileRecipesFragment : Fragment(), RecipeAdapter.OnClick, AddToFavView{
     private val myRecipeList = arrayListOf<Recipe>()
 
     //own recipe rc adapter
-    private lateinit var adapter: RecipeAdapter
+    lateinit var adapter: RecipeAdapter
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 

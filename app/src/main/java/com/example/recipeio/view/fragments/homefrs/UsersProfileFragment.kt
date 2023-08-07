@@ -14,18 +14,24 @@ import com.bumptech.glide.disklrucache.DiskLruCache.Value
 import com.example.recipeio.R
 import com.example.recipeio.databinding.FragmentUsersProfileBinding
 import com.example.recipeio.model.Recipe
+import com.example.recipeio.model.User
 import com.example.recipeio.presenter.AddToFavPresenterImpl
 import com.example.recipeio.presenter.AddToFavView
+import com.example.recipeio.presenter.FollowUserPresenterImpl
+import com.example.recipeio.presenter.FollowUserView
 import com.example.recipeio.utils.Consts
+import com.example.recipeio.utils.Consts.AUTH
 import com.example.recipeio.utils.Consts.REF
 import com.example.recipeio.view.adapters.RecipeAdapter
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
+import kotlinx.coroutines.async
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
 
-class UsersProfileFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView {
+class UsersProfileFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView,FollowUserView {
     private lateinit var binding: FragmentUsersProfileBinding
     private val presenter = AddToFavPresenterImpl()
     private var recipe: Recipe ?= null
@@ -34,6 +40,16 @@ class UsersProfileFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView {
     private lateinit var adapter: RecipeAdapter
     private val ownRecipesList = arrayListOf<Recipe>()
     private val listOfSavedRecipes = arrayListOf<Recipe>()
+
+    private val followPresenter = FollowUserPresenterImpl()
+
+    private var user: User ?= null
+    private var currentUser: User ?= null
+
+    private var recipesCount:Int?=null
+
+    private val followingList = arrayListOf<User>()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -50,10 +66,42 @@ class UsersProfileFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         presenter.attach(this)
+        followPresenter.attach(this)
+
         getInfo()
         putInfoToUi()
         whereFrom()
         getUserRecipes()
+        getCurrentUser()
+        binding.apply {
+            lifecycleScope.launch {
+                delay(1000)
+                if (btFollow.text=="Follow"){
+                    follow()
+                }else if (btFollow.text == "Unfollow"){
+                    unFollow()
+                }
+            }
+        }
+
+
+        isAlreadyFollowed()
+
+        lifecycleScope.launch {
+            async {
+                userInit()
+                delay(1)
+                getCountFollowersAndFollowing()
+                delay(1)
+                getCountOfOwnRecipes()
+            }
+
+        }
+
+    }
+    private suspend fun userInit(){
+        user = User(uid = recipe!!.ownerId, username = recipe!!.username
+            , uri = recipe!!.userImage)
     }
 
     //getting users info
@@ -169,6 +217,144 @@ class UsersProfileFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView {
     }
 
 
+    //follow when clicking the button
+    private fun follow(){
+        binding.btFollow.setOnClickListener {
+
+            lifecycleScope.launch {
+                if (currentUser!!.uid!=user!!.uid){
+                    followPresenter.followUser(currentUser!!, user!!)
+                }else{
+                    Toast.makeText(context,"you cant follow for your account",
+                    Toast.LENGTH_LONG).show()
+                }
+
+                delay(100)
+                if (binding.btFollow.text=="Follow"){
+                    follow()
+                }else if (binding.btFollow.text == "Unfollow"){
+                    unFollow()
+                }
+            }
+
+        }
+    }
+    //follow when clicking the button
+    private fun unFollow(){
+        binding.btFollow.setOnClickListener {
+
+            lifecycleScope.launch {
+                    followPresenter.unFollowUser(currentUser!!, user!!)
+
+
+                delay(100)
+                if (binding.btFollow.text=="Follow"){
+                    follow()
+                }else if (binding.btFollow.text == "Unfollow"){
+                    unFollow()
+                }
+            }
+
+
+        }
+    }
+    private fun getCurrentUser(){
+        REF.child("users/${AUTH.currentUser!!.uid}").addValueEventListener(
+            object :ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    currentUser = snapshot.getValue(User::class.java)
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            }
+        )
+    }
+
+    private suspend fun getCountFollowersAndFollowing(){
+        REF.child("users/${user!!.uid}/followers").addValueEventListener(
+            object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val count = snapshot.children.count()
+                    binding.tvuserfollowers.text = count.toString()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            }
+        )
+
+
+        REF.child("users/${user!!.uid}/following").addValueEventListener(
+            object : ValueEventListener{
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val count = snapshot.children.count()
+                    binding.tvuserfollowing.text = count.toString()
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+                    TODO("Not yet implemented")
+                }
+
+            }
+        )
+    }
+    private suspend fun getCountOfOwnRecipes(){
+        lifecycleScope.launch {
+            REF.child("users/${user!!.uid}/myRecipes").addValueEventListener(
+                object : ValueEventListener{
+                    override fun onDataChange(snapshot: DataSnapshot) {
+                        recipesCount = snapshot.children.count()
+                        binding.tvamountrecipesuser.text = recipesCount.toString()
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {
+                        TODO("Not yet implemented")
+                    }
+
+                }
+            )
+        }
+
+    }
+
+    //here we check if user Already followed
+    private fun isAlreadyFollowed(){
+        REF.child("users/${AUTH.currentUser!!.uid}/following").addValueEventListener(object :
+        ValueEventListener{
+            override fun onDataChange(snapshot: DataSnapshot) {
+                followingList.clear()
+                for (ds in snapshot.children){
+                    val value = ds.getValue(User::class.java)
+                    value?.let {
+                        followingList.add(it)
+                    }
+                    if (followingList.contains(user)){
+                        binding.btFollow.text = "Unfollow"
+                    }else{
+                        binding.btFollow.text = "Follow"
+                    }
+
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        })
+
+
+    }
+
+
+
+
 
     //here when checkbox was checked we delete from fav by clicking the checkbox
     override fun onCheckBoxClickWhenChecked(recipe: Recipe) {
@@ -180,4 +366,13 @@ class UsersProfileFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView {
     override fun message(message: String) {
         Toast.makeText(context,message,Toast.LENGTH_LONG).show()
     }
+
+    override fun changeText() {
+        binding.btFollow.setText("Unfollow")
+    }
+
+    override fun changeBack() {
+        binding.btFollow.setText("Follow")
+    }
+
 }
