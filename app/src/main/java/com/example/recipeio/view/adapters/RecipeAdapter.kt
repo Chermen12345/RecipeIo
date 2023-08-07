@@ -41,19 +41,21 @@ class RecipeAdapter(val list: ArrayList<Recipe>,val  onClick: OnClick): Recycler
             }
         }
         holder.binding.imgprofilehome.setOnClickListener {
-
+            onClick.onImageClick(list[position])
         }
+
 
 
     }
 
     interface OnClick{
+        fun onImageClick(recipe: Recipe){}
         fun isAtFav(recipe: Recipe): Boolean
-        fun onItemClick(recipe: Recipe)
-        fun onCheckBoxClickWhenUnChecked(recipe: Recipe)
+        fun onItemClick(recipe: Recipe){}
+        fun onCheckBoxClickWhenUnChecked(recipe: Recipe){}
 
 
-        fun onCheckBoxClickWhenChecked(recipe: Recipe)
+        fun onCheckBoxClickWhenChecked(recipe: Recipe){}
 
     }
 }

@@ -90,7 +90,8 @@ class SignUpFragment : Fragment(), SignUpView {
                 val pass = edPassSignUp.text.toString()
                 val repeatpass = edPassRepeat.text.toString()
                 val uri = uri
-                val user = User(username,email,pass,repeatpass,uri.toString())
+                val user = User(username = username,email = email, password = pass, repeatPassword = repeatpass,
+                    uri = uri.toString())
 
                 lifecycleScope.launch{
                     async {

@@ -22,6 +22,7 @@ class SignUpPresenterImpl(): SignUpPresenter {
                         if (putimg.isSuccessful){
                             STORAGE.child("users/profileImages/${AUTH.currentUser!!.uid}").downloadUrl.addOnSuccessListener {url->
                                 val map = hashMapOf<String,String>()
+                                map["uid"] = AUTH.currentUser!!.uid
                                 map["username"] = username
                                 map["email"] = email
                                 map["password"] = password

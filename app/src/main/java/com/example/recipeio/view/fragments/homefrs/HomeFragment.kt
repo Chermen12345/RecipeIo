@@ -267,4 +267,5 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
     }
 
 
+
 }

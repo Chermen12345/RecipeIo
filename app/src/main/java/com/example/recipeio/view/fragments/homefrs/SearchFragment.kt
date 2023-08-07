@@ -8,9 +8,11 @@ import android.widget.NumberPicker.OnValueChangeListener
 import android.widget.SearchView
 import android.widget.SearchView.OnQueryTextListener
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.recipeio.R
 import com.example.recipeio.databinding.FragmentSearchBinding
+import com.example.recipeio.model.Recipe
 import com.example.recipeio.model.User
 import com.example.recipeio.utils.Consts.REF
 import com.example.recipeio.view.adapters.UserSearchAdapter
@@ -19,7 +21,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.ValueEventListener
 
 
-class SearchFragment : Fragment() {
+class SearchFragment : Fragment(),UserSearchAdapter.onClick {
 
     private lateinit var binding: FragmentSearchBinding
 
@@ -85,7 +87,7 @@ class SearchFragment : Fragment() {
 
                 }
                 binding.apply {
-                    adapter = UserSearchAdapter(list)
+                    adapter = UserSearchAdapter(list,this@SearchFragment)
                     rcUsers.adapter = adapter
                     rcUsers.layoutManager = LinearLayoutManager(context)
                 }
@@ -108,11 +110,19 @@ class SearchFragment : Fragment() {
                     searchList = list.filter { user ->
                         user.username.toLowerCase().contains(newText)
                     } as ArrayList<User>
-                    adapter = UserSearchAdapter(searchList)
+                    adapter = UserSearchAdapter(searchList,this@SearchFragment)
                     binding.rcUsers.adapter = adapter
                 }
                 return true
             }
         })
+    }
+
+    override fun onUserClick(user: User) {
+        val recipe = Recipe(ownerId = user.uid, userImage = user.uri, username = user.username)
+        val bundle = Bundle()
+        bundle.putSerializable("recipe",recipe)
+        bundle.putInt("wherefrom",1)
+        findNavController().navigate(R.id.action_searchfr_to_usersProfileFragment,bundle)
     }
 }

@@ -122,4 +122,12 @@ class ProfileSavedFragment : Fragment() , RecipeAdapter.OnClick,AddToFavView{
         findNavController().navigate(R.id.action_profilefr_to_detailesFragment,bundle)
     }
 
+    //when we click the users image we go to users profile
+    override fun onImageClick(recipe: Recipe) {
+        val bundle = Bundle()
+        bundle.putSerializable("recipe",recipe)
+        bundle.putInt("wherefrom",1)
+        findNavController().navigate(R.id.action_profilefr_to_usersProfileFragment,bundle)
+    }
+
 }

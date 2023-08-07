@@ -41,6 +41,8 @@ class DetailesFragment : Fragment() {
         setUpBottomSheetDialog()
 
         goBack()
+
+        recipe?.let { onImageClick(it) }
     }
 
     private fun getData(){
@@ -72,7 +74,24 @@ class DetailesFragment : Fragment() {
             when(nav_back){
                 1 -> {findNavController().navigate(R.id.action_detailesFragment_to_homefr)}
                 2 -> {findNavController().navigate(R.id.action_detailesFragment_to_profilefr)}
+                3 -> {
+                    val bundle = Bundle()
+                    bundle.putSerializable("recipe",recipe)
+                    bundle.putInt("wherefrom",1)
+
+                    findNavController().navigate(R.id.action_detailesFragment_to_usersProfileFragment,bundle)}
             }
+        }
+
+    }
+
+    //when we click the users image we go to users profile
+    private fun onImageClick(recipe: Recipe) {
+        binding.imguserdet.setOnClickListener {
+            val bundle = Bundle()
+            bundle.putSerializable("recipe",recipe)
+            bundle.putInt("wherefrom",2)
+            findNavController().navigate(R.id.action_detailesFragment_to_usersProfileFragment,bundle)
         }
 
     }

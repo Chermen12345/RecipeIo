@@ -122,7 +122,7 @@
     </fragment>
     <fragment
         android:id="@+id/usersProfileFragment"
-        android:name="com.example.recipeio.UsersProfileFragment"
+        android:name="com.example.recipeio.view.fragments.homefrs.UsersProfileFragment"
         android:label="fragment_users_profile"
         tools:layout="@layout/fragment_users_profile" >
         <action
