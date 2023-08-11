@@ -3,6 +3,7 @@ package com.example.recipeio.presenter
 import com.example.recipeio.model.User
 import com.example.recipeio.utils.Consts.AUTH
 import com.example.recipeio.utils.Consts.REF
+import kotlin.random.Random
 
 class FollowUserPresenterImpl():FollowUserPresenter {
     private lateinit var view: FollowUserView
@@ -14,11 +15,9 @@ class FollowUserPresenterImpl():FollowUserPresenter {
                 view.changeText()
             }
         }
-        REF.child("users/${user.uid}/followers/${currentUser.username}").setValue(currentUser).addOnCompleteListener {
-            if (it.isSuccessful){
+        REF.child("users/${user.uid}/followers/${currentUser.username}").setValue(currentUser)
+        REF.child("users/${user.uid}/notifications/${Random.nextInt()}").setValue(currentUser)
 
-            }
-        }
     }
 
     override suspend fun unFollowUser(currentUser: User, user: User) {

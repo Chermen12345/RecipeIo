@@ -1,6 +1,7 @@
 package com.example.recipeio.view.fragments.homefrs
 
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
+import com.example.recipeio.NotificationService
 import com.example.recipeio.R
 import com.example.recipeio.databinding.FragmentHomeBinding
 import com.example.recipeio.model.Recipe
@@ -58,6 +60,8 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
         presenter.attach(this)
 
 
+
+
         //getting info from db
         getRecipes()
 
@@ -67,6 +71,8 @@ class HomeFragment : Fragment(),RecipeAdapter.OnClick,AddToFavView{
 
         //
         getLikedRecipes()
+
+        requireActivity().startService(Intent(context,NotificationService::class.java))
 
     }
 
